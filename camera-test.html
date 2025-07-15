@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    video { width: 300px; height: 200px; border: 2px solid #ccc; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+    #status { margin: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Camera Test</h1>
+  <div id="status">Click "Start Camera" to test</div>
+  <video id="testVideo" autoplay muted></video>
+  <br>
+  <button onclick="startCamera()">Start Camera</button>
+  <button onclick="stopCamera()">Stop Camera</button>
+  
+  <script>
+    const video = document.getElementById('testVideo');
+    const status = document.getElementById('status');
+    let stream = null;
+    
+    async function startCamera() {
+      try {
+        status.textContent = "Requesting camera access...";
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        status.textContent = "Camera started successfully!";
+        status.style.color = "green";
+      } catch (error) {
+        status.textContent = "Camera error: " + error.message;
+        status.style.color = "red";
+        console.error("Camera error:", error);
+      }
+    }
+    
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        status.textContent = "Camera stopped";
+        status.style.color = "black";
+      }
+    }
+  </script>
+</body>
+</html>

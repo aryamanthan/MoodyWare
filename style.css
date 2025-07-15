@@ -1,0 +1,63 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.box {
+  width: 45%;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+video {
+  width: 100%;
+  border-radius: 10px;
+}
+
+#songs-list {
+  list-style: none;
+  padding: 0;
+}
+
+#songs-list li {
+  margin: 8px 0;
+  padding: 8px;
+  background: #eee;
+  border-radius: 5px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+#camera-box {
+  position: relative;
+}
+
+#camera-box canvas {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+#mood {
+  font-weight: bold;
+  color: #007acc;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
