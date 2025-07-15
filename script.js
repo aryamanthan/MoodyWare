@@ -70,7 +70,7 @@ async function initApp() {
     console.log("Models loaded successfully!");
     moodDisplay.textContent = "Starting camera...";
     
-    // Start video
+    // Start video 
     await startVideo();
     
   } catch (error) {
