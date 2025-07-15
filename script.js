@@ -54,18 +54,22 @@ async function initApp() {
     
     console.log("Loading models...");
     
-    // Load models with timeout
-    const modelPromise = Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
-      faceapi.nets.faceExpressionNet.loadFromUri("./models")
-    ]);
+    // Load models with proper error handling
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri("./models");
+      console.log("Tiny face detector model loaded");
+    } catch (error) {
+      console.error("Failed to load tiny face detector:", error);
+      throw new Error("Failed to load face detection model. Check if model files are present.");
+    }
     
-    // Add timeout to model loading
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Model loading timeout. Check if model files are present in ./models folder.")), 10000);
-    });
-    
-    await Promise.race([modelPromise, timeoutPromise]);
+    try {
+      await faceapi.nets.faceExpressionNet.loadFromUri("./models");
+      console.log("Face expression model loaded");
+    } catch (error) {
+      console.error("Failed to load face expression model:", error);
+      throw new Error("Failed to load expression recognition model. Check if model files are present.");
+    }
     
     console.log("Models loaded successfully!");
     moodDisplay.textContent = "Starting camera...";
@@ -87,14 +91,21 @@ function showFallbackMessage() {
     <li style="color: red; font-weight: bold;">❌ Camera/AI not available</li>
     <li>Please ensure:</li>
     <li>• Camera permissions are granted</li>
+    <li>• Site is accessed via HTTPS (required for camera)</li>
     <li>• Internet connection is stable</li>
     <li>• Browser supports WebRTC</li>
     <li>• Try refreshing the page</li>
+    <li style="margin-top: 10px; color: blue;">💡 Tip: GitHub Pages requires HTTPS for camera access</li>
   `;
 }
 
 async function startVideo() {
   console.log("Requesting camera access...");
+  
+  // Check if we're on HTTPS (required for camera on GitHub Pages)
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    throw new Error("Camera requires HTTPS. Please use https:// URL.");
+  }
   
   // Check if getUserMedia is supported
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
